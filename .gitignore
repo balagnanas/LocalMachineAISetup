@@ -1,0 +1,27 @@
+# Secrets and authentication
+auth.json
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.*
+
+# Codex local and generated state
+memories/
+sessions/
+threads/
+browser/
+computer-use/
+plugins/
+cache/
+logs/
+*.log
+.codex-global-state.json
+config.local.toml
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+*.swp
