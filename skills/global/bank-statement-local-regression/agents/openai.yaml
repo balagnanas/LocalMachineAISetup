@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bank Statement Local Regression"
+  short_description: "Verify local statement extraction workbooks."
+  default_prompt: "Run the authorized bank-statement regression against localhost:8000 and report workbook evidence."

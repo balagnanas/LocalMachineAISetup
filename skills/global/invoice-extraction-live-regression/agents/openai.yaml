@@ -1,0 +1,4 @@
+interface:
+  display_name: "Invoice Extraction Regression"
+  short_description: "Run and learn from live invoice regression"
+  default_prompt: "Use $invoice-extraction-live-regression to run the authorized local invoice regression."
