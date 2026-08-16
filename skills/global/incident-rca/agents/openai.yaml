@@ -1,0 +1,4 @@
+interface:
+  display_name: "Incident RCA"
+  short_description: "Produce concise evidence-backed incident reports"
+  default_prompt: "Use $incident-rca to investigate this issue and produce a concise evidence-backed report."

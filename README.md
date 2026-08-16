@@ -15,6 +15,22 @@ The lead agent retains planning, integration, security-sensitive work, releases,
 * `AGENTS.md` — global operating policy.
 * `agents/luna-worker.toml` — low-cost bounded implementation worker.
 * `config.example.toml` — portable configuration fragment.
+* `skills/` — reviewed, user-authored skills grouped by their source scope.
+
+## Portable skills
+
+`skills/` intentionally contains only custom skills from this machine. It excludes
+bundled and plugin-provided skills, credentials, memories, screen recordings,
+caches, logs, and other machine-generated state.
+
+The source scope is preserved so identically named skills can coexist:
+
+* `skills/global/` — skills sourced from `~/.codex/skills`.
+* `skills/veritaxiq/` — repository-local VeritaxIQ skills.
+
+See [`skills/MANIFEST.md`](skills/MANIFEST.md) for the inventory and installation
+guidance. Review every skill before installing it; some are intentionally specific
+to a local Ledger/VeritaxIQ deployment.
 
 ## Install
 
