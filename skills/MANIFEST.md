@@ -12,6 +12,7 @@ This inventory preserves the custom skills installed on the source machine as of
 | Global | `veritaxiq-release-promotion` | Guarded production-promotion workflow. |
 | VeritaxIQ | `ledger-local-dev-deployment` | Localhost Ledger deployment workflow. |
 | VeritaxIQ | `veritaxiq-release-promotion` | Repository-local release workflow variant. |
+| Productivity | `new-session` | One branch + git worktree per session; portable session-start helper (`new-session.sh`). |
 
 ## Installation
 

@@ -18,6 +18,17 @@ These instructions define default behavior across projects. Follow more-specific
 * Never modify secrets, credentials, production configuration, or customer data without explicit authorization.
 * Do not commit generated files, build outputs, logs, temporary files, or local environment files.
 
+## New Sessions
+
+At the start of a new session in a git repository, work from a dedicated feature branch and git
+worktree instead of the integration branch:
+
+* Run the `new-session` skill (its bundled `new-session.sh [suffix]`) to create a branch off the
+  repository default branch under `.worktrees/<branch>`.
+* Do the session's work inside that worktree.
+* One branch + worktree per session. Do not commit or push unless explicitly authorized.
+* Sync from the integration branch before final verification.
+
 ## Before Implementing
 
 Investigate relevant code, tests, configuration, dependency manifests, and repository documentation before asking questions. Raise contradictory repository evidence instead of silently choosing an interpretation.
