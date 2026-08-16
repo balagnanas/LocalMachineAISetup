@@ -1,20 +1,25 @@
 # Local Machine AI Setup
 
-Portable Codex configuration for a cost-aware engineering workflow.
+Portable Codex and OpenCode configuration for a cost-aware engineering workflow.
 
 ## Model routing
 
-* **Luna (`gpt-5.6-luna`, max):** small, bounded implementation and verification tasks with clear acceptance criteria.
-* **Terra (`gpt-5.6-terra`):** repository exploration, research, medium-complexity debugging, and supporting reviews.
-* **Sol (`gpt-5.6-sol`):** architecture, ambiguous multi-step work, high-risk changes, incident analysis, and final review.
+* **Orchestrator — Terra medium:** routine coordination, integration, and final responses.
+* **Worker — Luna high:** small, bounded implementation with settled acceptance criteria.
+* **Tester — Luna high:** independent verification and regression evidence.
+* **Planner — Sol medium:** non-trivial, ambiguous, cross-component, or high-risk plans.
+* **Reviewer — Terra high:** independent correctness, security, and regression review.
 
-The lead agent retains planning, integration, security-sensitive work, releases, and final review. Luna workers never commit, push, deploy, or make architectural decisions independently.
+The orchestrator retains product and architecture decisions, sensitive work, releases, integration,
+and the final response. Delegation is selective so routine tasks do not duplicate context or usage.
 
 ## Files
 
 * `AGENTS.md` — global operating policy.
-* `agents/luna-worker.toml` — low-cost bounded implementation worker.
+* `agents/` — worker, tester, planner, and reviewer role definitions.
 * `config.example.toml` — portable configuration fragment.
+* `opencode/AGENTS.md` — global OpenCode configuration-sync policy.
+* `scripts/sync-local-ai-setup.sh` — allowlisted local-to-repository synchronization.
 * `skills/` — reviewed, user-authored skills grouped by their source scope.
 * `opencode/skill/` and `.codex/skills/` — tool-specific mirrors of the same skills.
 
@@ -42,10 +47,24 @@ Review the files before installing. Preserve any existing local settings that ar
 ```bash
 mkdir -p ~/.codex/agents
 cp AGENTS.md ~/.codex/AGENTS.md
-cp agents/luna-worker.toml ~/.codex/agents/luna-worker.toml
+cp agents/worker.toml agents/tester.toml agents/planner.toml agents/reviewer.toml ~/.codex/agents/
+cp opencode/AGENTS.md ~/.config/opencode/AGENTS.md
 ```
 
 Merge the desired values from `config.example.toml` into `~/.codex/config.toml`; do not overwrite an existing configuration wholesale.
+
+## Synchronize local configuration
+
+Run the allowlisted sync after changing Codex or OpenCode configuration:
+
+```bash
+./scripts/sync-local-ai-setup.sh
+```
+
+The script copies only the global instruction files, the four custom Codex roles, the portable Codex
+model-routing fragment, and the reviewed OpenCode JSON configuration. It validates required fields
+and JSON and stops if the OpenCode file contains credential-like keys or values. Review the resulting
+diff before committing.
 
 ## Excluded on purpose
 
