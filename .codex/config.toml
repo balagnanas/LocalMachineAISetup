@@ -1,0 +1,157 @@
+notify = ["/Users/balasekar/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+model_reasoning_effort = "medium"
+personality = "pragmatic"
+approval_policy = "never"
+approvals_reviewer = "user"
+sandbox_mode = "danger-full-access"
+
+oss_provider = "lmstudio"
+
+
+
+model = "gpt-5.6-sol"
+
+[agents]
+max_concurrent_threads_per_session = 1
+
+[projects."/Users/balasekar/src/VeritaxIQ"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/Documents/Codex/2026-08-09/i-h"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/Documents/Codex/2026-08-09/new-chat"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/Documents/Codex/2026-08-09/i-w"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/Documents/Codex/2026-08-09/rea"]
+trust_level = "trusted"
+
+[projects."/private/var/folders/_n/4d9c_vbj5452m6h9ngfq7w740000gn/T/codex-agent-check-ezA4j1"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/Documents/Codex/2026-08-10/unexpected-status-403-forbidden-opencode-rejected"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/Documents/Codex/2026-08-10/wh"]
+trust_level = "trusted"
+
+[projects."/Users/balasekar/.codex/worktrees/5776/VeritaxIQ"]
+trust_level = "trusted"
+
+[marketplaces.openai-bundled]
+last_updated = "2026-08-15T18:41:32Z"
+source_type = "local"
+source = "/Users/balasekar/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-08-14T08:33:58Z"
+source_type = "local"
+source = "/Users/balasekar/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = false
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = false
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[features]
+js_repl = false
+memories = true
+chronicle = true
+
+
+
+
+
+
+
+
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/balasekar/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/balasekar/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.810.52044"
+SKY_CUA_SERVICE_PATH = "/Users/balasekar/.codex/computer-use/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
+dock-icon-preference = "app-default"
+preventSleepWhileRunning = true
+show-context-window-usage = true
+open-local-url-in-target-preference = "external-browser"
+computerUseAlwaysHidePictureInPicture = true
+keepRemoteControlAwakeWhilePluggedIn = true
+dictationDictionary = ["Blissy"]
+enabled-reasoning-efforts = ["low", "medium", "high", "xhigh", "ultra", "max"]
+external-agent-import-sync-enabled = true
+
+[desktop.open-in-target-preferences]
+global = "vscode"
+
+[desktop.open-in-target-preferences.perPath]
+"/Users/balasekar/.codex/worktrees/d467/VeritaxIQ" = "iterm2"
+"/Users/balasekar/.codex/worktrees/2a27/VeritaxIQ" = "vscode"
+"/Users/balasekar/.codex/worktrees/d5dd/VeritaxIQ" = "vscode"
+"/Users/balasekar/.codex/worktrees/2a9f/VeritaxIQ" = "vscode"
+
+[shell_environment_policy.set]
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/balasekar/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+
+[memories]
+generate_memories = true
+use_memories = true

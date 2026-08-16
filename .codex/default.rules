@@ -1,0 +1,8 @@
+prefix_rule(pattern=["git", "--no-pager", "fetch"], decision="allow")
+prefix_rule(pattern=["az", "account", "show", "--query", "{subscription:name,subscriptionId:id,tenantId:tenantId,user:user.name}", "-o", "json"], decision="allow")
+prefix_rule(pattern=["az", "ad", "user", "show"], decision="allow")
+prefix_rule(pattern=["az", "rest", "--method", "get"], decision="allow")
+prefix_rule(pattern=["az", "containerapp", "show"], decision="allow")
+prefix_rule(pattern=["az", "storage", "blob", "list"], decision="allow")
+prefix_rule(pattern=["az", "storage", "blob", "download", "--account-name", "truwayieiestcvsvc4v5", "--container-name", "processed", "--name", "t/truway/admin/users.json", "--auth-mode", "login", "--file", "/private/tmp/veritaxiq-truway-users.json", "--overwrite", "true", "-o", "none"], decision="allow")
+prefix_rule(pattern=["az", "rest", "--method", "post", "--url", "https://graph.microsoft.com/v1.0/servicePrincipals/d5ff6583-e6d5-4c40-9a73-8e71ab21e3df/appRoleAssignedTo"], decision="allow")

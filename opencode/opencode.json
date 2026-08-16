@@ -1,0 +1,156 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+
+    "default_agent": "orchestrator",
+    "small_model": "openai/gpt-5.4-mini",
+
+    "provider": {
+        "lmstudio": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "LM Studio",
+            "options": {
+                "baseURL": "http://127.0.0.1:1234/v1"
+            },
+            "models": {
+                "qwen/qwen3.6-35b-a3b": {
+                    "name": "Qwen Local"
+                }
+            }
+        },
+
+        "ollama": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Ollama (local)",
+            "options": {
+                "baseURL": "http://127.0.0.1:11434/v1"
+            },
+            "models": {
+                "qwen3.6:35b-mlx": {
+                    "name": "Qwen3.6 35B MLX (Ollama local)"
+                },
+                "qwen3.8:27b-mlx": {
+                    "name": "Qwen3.8 27B MLX (Ollama local)"
+                }
+            }
+        },
+
+        "codex-router": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Codex Router",
+            "options": {
+                "baseURL": "http://127.0.0.1:4102/_codex-router/Hda-Pzku5ffThUq4NRN-jKm2dEa9oUPB0khKYURnJCfqY3JUzFt2o3A1eCLQIpNd/v1"
+            },
+            "models": {
+                "gpt-5.6-sol": {
+                    "name": "GPT-5.6-Sol",
+                    "reasoning": true
+                },
+                "gpt-5.6-terra": {
+                    "name": "GPT-5.6-Terra",
+                    "reasoning": true
+                },
+                "gpt-5.6-luna": {
+                    "name": "GPT-5.6-Luna",
+                    "reasoning": true
+                },
+                "gpt-5.5": {
+                    "name": "GPT-5.5",
+                    "reasoning": true
+                },
+                "gpt-5.4": {
+                    "name": "GPT-5.4",
+                    "reasoning": true
+                },
+                "gpt-5.4-mini": {
+                    "name": "GPT-5.4-Mini",
+                    "reasoning": true
+                },
+                "gpt-5.2": {
+                    "name": "GPT-5.2",
+                    "reasoning": true
+                }
+            }
+        }
+    },
+
+    "mcp": {
+        "node_repl": {
+            "type": "local",
+            "command": ["/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"],
+            "enabled": true,
+            "environment": {
+                "NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS": "1000",
+                "NODE_REPL_NODE_MODULE_DIRS": "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules",
+                "NODE_REPL_NODE_PATH": "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node",
+                "NODE_REPL_TRUSTED_CODE_PATHS": "/Users/balasekar/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules",
+                "CODEX_HOME": "/Users/balasekar/.codex",
+                "NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S": "323bc3e687e17d7e377238d9f4c69111c4d0e6219103b6316d8c52082489533b",
+                "BROWSER_USE_AVAILABLE_BACKENDS": "chrome,iab",
+                "NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER": "Control the in-app browser in conjunction with the Browser Plugin.",
+                "NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME": "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative.",
+                "NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE": "Control desktop apps on macOS through Computer Use.",
+                "BROWSER_USE_CODEX_APP_BUILD_FLAVOR": "prod",
+                "BROWSER_USE_CODEX_APP_VERSION": "26.803.41515",
+                "SKY_CUA_SERVICE_PATH": "/Users/balasekar/.codex/computer-use/Codex Computer Use.app",
+                "CODEX_CLI_PATH": "/Applications/ChatGPT.app/Contents/Resources/codex"
+            }
+        },
+        "computer-use": {
+            "type": "local",
+            "command": ["/Users/balasekar/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "mcp"],
+            "enabled": false
+        }
+    },
+
+    "permission": {
+        "edit": "allow",
+        "bash": {
+            "* az account show --query * -o json": "allow",
+            "* az ad user show": "allow",
+            "* az rest --method get": "allow",
+            "* az containerapp show": "allow",
+            "* az storage blob list": "allow",
+            "* git --no-pager fetch": "allow",
+            "* az storage blob download * veritaxiq-truway-users *": "allow"
+        },
+        "webfetch": "allow",
+        "websearch": "allow",
+        "external_directory": {
+            "*": "ask"
+        }
+    },
+
+    "agent": {
+        "orchestrator": {
+            "mode": "primary",
+            "model": "openai/gpt-5.6-luna",
+            "reasoningEffort": "high",
+            "prompt": "You are the primary software engineering agent. Analyze requests, understand the repository, make architectural decisions, and delegate bounded implementation tasks to appropriate subagents.\n\nDelegation rules:\n- Default implementer for scoped work: worker (cloud). Prefer worker over coder.\n- Explorer: repository research only (local).\n- Tester: run/interpret checks; write or update tests when asked.\n- Coder: local cheap edits only — trivial, non-financial, clearly patterned changes. Do not send money/extractor/recon/auth work to coder.\n- Prefer project commands (/verify, /sync, /regress, /deploy-local, /release, /rca, /new-session) when they match the request.\n\nKeep difficult reasoning, architectural decisions, security-sensitive changes, unresolved ambiguity, and final integration review for yourself. Delegate straightforward coding, testing, documentation, refactoring and repository exploration whenever appropriate."
+        },
+
+        "worker": {
+            "mode": "subagent",
+            "model": "openai/gpt-5.6-luna",
+            "reasoningEffort": "high",
+            "prompt": "You are the default execution-focused worker receiving one bounded task from a lead agent. Prefer you over the local coder for any non-trivial implementation.\n\nBefore editing:\n- Read the applicable AGENTS.md files and the directly relevant code and tests.\n- Confirm that the requested work is small, clearly scoped, and follows an existing pattern.\n- If requirements are ambiguous, repository evidence conflicts, or completing the task requires an architectural decision, stop and return the blocker to the lead agent.\n\nFinancial / extractor / reconciliation logic:\n- Allowed only when the lead agent supplies explicit acceptance criteria AND the change is covered by focused automated tests you run (or extend).\n- If acceptance criteria or tests are missing for money-path behavior, stop and return the blocker instead of improvising.\n\nDuring implementation:\n- Make the smallest maintainable change that satisfies the stated acceptance criteria.\n- Preserve backward compatibility and existing repository conventions.\n- Reuse existing utilities and abstractions.\n- Do not refactor unrelated code or broaden the task.\n- Preserve all pre-existing user changes.\n- Add or update focused tests when behavior changes.\n- Run only the checks relevant to the affected area.\n\nDo not:\n- Make architectural or product decisions.\n- Handle authentication/authorization redesign, schemas/migrations without explicit lead instruction, concurrency-sensitive redesign, unresolved incidents, releases, deployments, production verification, secrets, or customer data.\n- Commit, push, merge, open pull requests, delete files or branches, or modify external systems unless the lead agent explicitly provides user authorization.\n\nReturn a concise result containing:\n1. Outcome\n2. Files changed\n3. Tests and commands actually executed\n4. Remaining risks or blockers\n\nNever claim a test passed unless it was executed."
+        },
+
+        "coder": {
+            "mode": "subagent",
+            "model": "lmstudio/qwen/qwen3.6-35b-a3b",
+            "prompt": "You are a local cheap-edit coder for TRIVIAL tasks only.\n\nUse only when the lead agent assigns a clearly patterned, non-financial change (rename, small copy edit, obvious mechanical fix, simple formatting).\n\nDo NOT implement:\n- Bank-statement / invoice extractors, Balance Check, reconciliation, amount/date parsing, review-queue logic\n- Auth, tenancy, payments, schemas, migrations, infra/deploy, releases\n- Broad refactors or anything needing architectural judgment\n\nIf the task is non-trivial or money-adjacent, stop and return the blocker so the lead can reassign to worker.\n\nFollow existing repository conventions. Run only the smallest relevant check. Report exactly what changed and what you ran. Never claim a test passed unless executed."
+        },
+
+        "tester": {
+            "mode": "subagent",
+            "model": "ollama/qwen3.6:35b-mlx",
+            "prompt": "Focus on tests, reproduction steps, validation, lint failures and straightforward bug investigation. Make minimal changes and report failures clearly. Prefer running existing gates (ruff/mypy/pytest/dotnet) over inventing new tooling. Never claim a command passed unless executed."
+        },
+
+        "explorer": {
+            "mode": "subagent",
+            "model": "ollama/qwen3.6:35b-mlx",
+            "prompt": "Explore the repository, locate relevant files, trace call paths, summarize existing implementations and answer focused codebase questions. Avoid making architectural decisions. Do not edit product code unless the lead explicitly asks for a tiny research-only annotation."
+        }
+    }
+}
