@@ -20,8 +20,27 @@ and the final response. Delegation is selective so routine tasks do not duplicat
 * `config.example.toml` — portable configuration fragment.
 * `opencode/AGENTS.md` — global OpenCode configuration-sync policy.
 * `scripts/sync-local-ai-setup.sh` — allowlisted local-to-repository synchronization.
+* `copilot/` — sanitized GitHub Copilot CLI role-agent profile.
+* `scout/` — sanitized Microsoft Scout UI settings profile.
 * `skills/` — reviewed, user-authored skills grouped by their source scope.
 * `opencode/skill/` and `.codex/skills/` — tool-specific mirrors of the same skills.
+
+## Public Copilot and Scout profiles
+
+`copilot/` contains a portable GitHub Copilot CLI role-agent profile:
+
+* `Planner` — decision-ready planning for non-trivial or high-risk work.
+* `Worker` — one bounded implementation following established patterns.
+* `Tester` — independent acceptance-criteria and regression verification.
+* `Reviewer` — read-only review of substantial or risky changes.
+
+`scout/` contains only a portable UI settings example. The source machine's Scout skills,
+automations, MCP definitions, and metadata are intentionally excluded because they can contain
+organization-specific routing, service references, and machine configuration.
+
+See [`copilot/README.md`](copilot/README.md) and [`scout/README.md`](scout/README.md) before
+installing either profile. Run `.\scripts\Test-PublicProfile.ps1` before publishing updates to these
+directories.
 
 ## Portable skills
 

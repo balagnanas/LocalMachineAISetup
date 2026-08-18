@@ -1,0 +1,22 @@
+{
+  "experiments": {
+    "openClawRuntime": false,
+    "authCooldown": true,
+    "authVerbose": false,
+    "uiExtensionsSystem": false,
+    "memoraEnabled": false,
+    "frontierBranding": false,
+    "squadsEnabled": true
+  },
+  "interceptFileChooser": false,
+  "loadCopilotCliSkills": true,
+  "miniModeEnabled": false,
+  "mouseWiggleEnabled": true,
+  "preventSleepEnabled": true,
+  "sessionRetentionDays": 90,
+  "showHideShortcut": "CommandOrControl+Alt+S",
+  "showHideShortcutEnabled": true,
+  "telemetryEnabled": true,
+  "theme": "system",
+  "updateChannelBeta": false
+}
