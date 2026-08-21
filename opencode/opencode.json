@@ -98,7 +98,32 @@
         "computer-use": {
             "type": "local",
             "command": ["/Users/balasekar/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "mcp"],
-            "enabled": false
+            "enabled": true
+        },
+        "playwright": {
+            "type": "local",
+            "command": ["npx", "-y", "@playwright/mcp@latest"],
+            "enabled": true
+        },
+        "chrome-devtools": {
+            "type": "local",
+            "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+            "enabled": true
+        },
+        "context7": {
+            "type": "local",
+            "command": ["npx", "-y", "@upstash/context7-mcp"],
+            "enabled": true
+        },
+        "sqlite": {
+            "type": "local",
+            "command": ["uvx", "--from", "mcp-server-sqlite", "--with", "mcp<2", "mcp-server-sqlite", "--db-path", "/Users/balasekar/.config/opencode/sqlite.db"],
+            "enabled": true
+        },
+        "azure": {
+            "type": "local",
+            "command": ["npx", "-y", "-p", "@azure/mcp@latest", "azmcp", "server", "start"],
+            "enabled": true
         }
     },
 

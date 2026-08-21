@@ -3,7 +3,7 @@
 # MCP environment values, and machine-specific application settings only in local config.
 
 model = "gpt-5.6-terra"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "high"
 personality = "pragmatic"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
