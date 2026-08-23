@@ -124,6 +124,11 @@
             "type": "local",
             "command": ["npx", "-y", "-p", "@azure/mcp@latest", "azmcp", "server", "start"],
             "enabled": true
+        },
+        "firecrawl": {
+            "type": "remote",
+            "url": "https://mcp.firecrawl.dev/v2/mcp",
+            "enabled": true
         }
     },
 
@@ -177,5 +182,8 @@
             "model": "ollama/qwen3.6:35b-mlx",
             "prompt": "Explore the repository, locate relevant files, trace call paths, summarize existing implementations and answer focused codebase questions. Avoid making architectural decisions. Do not edit product code unless the lead explicitly asks for a tiny research-only annotation."
         }
-    }
+    },
+    "plugin": [
+      "opencode-parser"
+    ]
 }

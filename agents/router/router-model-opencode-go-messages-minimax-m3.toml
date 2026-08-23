@@ -1,0 +1,11 @@
+# Managed by Codex Router. Refresh the model catalog to update this file.
+name = "router_opencode_go_messages_minimax_m3"
+description = "MiniMax M3 (opencode Go) agent routed through an authenticated Codex Router provider."
+model_provider = "codex-router"
+model = "opencode-go-messages/minimax-m3"
+
+developer_instructions = """
+Complete the bounded task assigned by the parent agent.
+Respect repository instructions, keep changes surgical, and run relevant verification.
+Return a concise summary of work completed, checks run, and remaining risks.
+"""

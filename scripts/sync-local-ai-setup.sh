@@ -4,6 +4,8 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 codex_root="${CODEX_HOME:-$HOME/.codex}"
 opencode_root="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+copilot_mcp_config="$HOME/.copilot/mcp-config.json"
+vscode_user_settings="$HOME/Library/Application Support/Code/User/settings.json"
 
 required_files=(
   "$codex_root/AGENTS.md"
@@ -118,6 +120,82 @@ done
 install -m 0644 "$opencode_root/AGENTS.md" "$repo_root/opencode/AGENTS.md"
 install -m 0644 "$opencode_root/opencode.json" "$repo_root/opencode/opencode.json"
 
+mkdir -p "$repo_root/agents/router"
+shopt -s nullglob
+router_tomls=("$codex_root/agents/router-model-"*.toml)
+shopt -u nullglob
+if (( ${#router_tomls[@]} )); then
+  grep -riE "api[_-]?key|secret|token|password|authorization" "${router_tomls[@]}" >/dev/null && {
+    echo "Credential-like string found in Codex Router agent definitions" >&2
+    exit 1
+  } || true
+  for toml in "${router_tomls[@]}"; do
+    install -m 0644 "$toml" "$repo_root/agents/router/$(basename "$toml")"
+  done
+  echo "Mirrored ${#router_tomls[@]} Codex Router agent definitions."
+fi
+
+python3 - "$copilot_mcp_config" "$repo_root/copilot/mcp-config.example.json" <<'PY'
+import json
+import pathlib
+import re
+import sys
+
+source = pathlib.Path(sys.argv[1])
+target = pathlib.Path(sys.argv[2])
+config = json.loads(source.read_text())
+for server in config.get("mcpServers", {}).values():
+    command = server.get("command")
+    if isinstance(command, str):
+        server["command"] = pathlib.PurePath(command).name
+text = json.dumps(config, indent=2) + "\n"
+if re.search(r"(?:api[_-]?key|authorization|credential|password|secret|token)", text, re.I):
+    raise SystemExit("Credential-like string found in Copilot MCP configuration")
+target.write_text(text)
+PY
+
+python3 - "$vscode_user_settings" "$repo_root/vscode/settings.example.json" <<'PY'
+import json
+import pathlib
+import re
+import sys
+
+source = pathlib.Path(sys.argv[1])
+target = pathlib.Path(sys.argv[2])
+config = json.loads(source.read_text())
+text = json.dumps(config, indent=4) + "\n"
+if re.search(r"(?:api[_-]?key|authorization|credential|password|secret|token)", text, re.I):
+    raise SystemExit("Credential-like string found in VS Code settings")
+target.write_text(text)
+PY
+
+third_party_skills=(
+  changelog-generate ci-pipeline code-review codebase-design dependency-audit
+  diagnosing-bugs domain-modeling git-release grill-with-docs implement
+  improve-codebase-architecture prototype research resolving-merge-conflicts
+  setup-matt-pocock-skills tdd test-patterns to-spec to-tickets triage wayfinder wizard
+)
+unmirrored="$(comm -23 \
+  <(ls "$opencode_root/skill" | sort) \
+  <(ls "$repo_root/opencode/skill" | sort))"
+drift=""
+while IFS= read -r skill; do
+  [[ -z "$skill" ]] && continue
+  is_third_party=0
+  for known in "${third_party_skills[@]}"; do
+    [[ "$skill" == "$known" ]] && { is_third_party=1; break; }
+  done
+  if (( ! is_third_party )); then
+    drift+="$skill "
+  fi
+done <<< "$unmirrored"
+if [[ -n "$drift" ]]; then
+  echo "Unmirrored OpenCode skills are not third-party references: $drift" >&2
+  exit 1
+else
+  echo "OpenCode skills drift check passed."
+fi
+
 python3 - "$repo_root" <<'PY'
 import json
 import pathlib
@@ -143,8 +221,23 @@ for path in sorted((root / "agents").glob("*.toml")):
             raise SystemExit(f"Missing {required_key} in {path}")
     if agent.count('"""') % 2:
         raise SystemExit(f"Unbalanced multiline string in {path}")
+router_agents = sorted((root / "agents" / "router").glob("*.toml")) if (root / "agents" / "router").is_dir() else []
+for path in router_agents:
+    agent = path.read_text()
+    for required_key in ("name", "description", "model_provider", "model", "developer_instructions"):
+        if not re.search(rf"(?m)^{re.escape(required_key)}\s*=", agent):
+            raise SystemExit(f"Missing {required_key} in {path}")
+    if re.search(r"(?mi)api[_-]?key|secret|token|password|authorization", agent):
+        raise SystemExit(f"Credential-like string in {path}")
+    if agent.count('"""') % 2:
+        raise SystemExit(f"Unbalanced multiline string in {path}")
 json.loads((root / "opencode/opencode.json").read_text())
-print("Validated portable Codex and OpenCode configuration.")
+json.loads((root / "copilot/mcp-config.example.json").read_text())
+json.loads((root / "vscode/settings.example.json").read_text())
+print(
+    f"Validated portable Codex and OpenCode configuration "
+    f"({len(router_agents)} Codex Router agents, Copilot MCP, VS Code settings)."
+)
 PY
 
 echo "Synchronized portable configuration into $repo_root"

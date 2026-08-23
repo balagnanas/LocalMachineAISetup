@@ -1,0 +1,11 @@
+# Managed by Codex Router. Refresh the model catalog to update this file.
+name = "router_opencode_go_kimi_k2_6"
+description = "Kimi K2.6 (opencode Go) agent routed through an authenticated Codex Router provider."
+model_provider = "codex-router"
+model = "opencode-go/kimi-k2.6"
+
+developer_instructions = """
+Complete the bounded task assigned by the parent agent.
+Respect repository instructions, keep changes surgical, and run relevant verification.
+Return a concise summary of work completed, checks run, and remaining risks.
+"""

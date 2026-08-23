@@ -1,0 +1,9 @@
+{
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "workbench.sideBar.location": "right",
+    "git.confirmSync": false,
+    "chat.tools.terminal.autoApprove": {
+        "git worktree": true
+    }
+}

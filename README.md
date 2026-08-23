@@ -17,10 +17,14 @@ and the final response. Delegation is selective so routine tasks do not duplicat
 
 * `AGENTS.md` — global operating policy.
 * `agents/` — worker, tester, planner, and reviewer role definitions.
+* `agents/router/` — Codex Router agent definitions that expose OpenCode Go models
+  (GLM-5.x, Kimi K2/K3, MiniMax M2/M3, Qwen 3.6–3.8, DeepSeek V4, Grok 4.5) to Codex.
 * `config.example.toml` — portable configuration fragment.
 * `opencode/AGENTS.md` — global OpenCode configuration-sync policy.
 * `scripts/sync-local-ai-setup.sh` — allowlisted local-to-repository synchronization.
-* `copilot/` — sanitized GitHub Copilot CLI role-agent profile.
+* `copilot/` — sanitized GitHub Copilot CLI role-agent profile plus an example MCP
+  server configuration (`mcp-config.example.json`).
+* `vscode/settings.example.json` — portable VS Code user settings.
 * `scout/` — sanitized Microsoft Scout UI settings profile.
 * `skills/` — reviewed, user-authored skills grouped by their source scope.
 * `opencode/skill/` and `.codex/skills/` — tool-specific mirrors of the same skills.

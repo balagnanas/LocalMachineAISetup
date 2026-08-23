@@ -32,3 +32,15 @@ cp -R skills/veritaxiq/ledger-local-dev-deployment /path/to/VeritaxIQ/.codex/ski
 
 Do not copy bundled or plugin-cache skills from another machine. Install those via
 their owning runtime or plugin instead.
+
+## Third-party references
+
+The source machine also runs the Matt Pocock engineering-skills pack in
+`~/.config/opencode/skill` (`tdd`, `triage`, `wizard`, `wayfinder`, `research`,
+`implement`, `prototype`, `code-review`, `ci-pipeline`, `dependency-audit`,
+`domain-modeling`, `test-patterns`, `to-spec`, `to-tickets`, `changelog-generate`,
+`codebase-design`, `diagnosing-bugs`, `git-release`, `grill-with-docs`,
+`improve-codebase-architecture`, `resolving-merge-conflicts`,
+`setup-matt-pocock-skills`). These are third-party skills and are intentionally
+not mirrored here; install them from their upstream source with the pack's own
+setup skill.
