@@ -1,11 +1,109 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Default direction: machine -> repository (portable salvage).
+# With --install: repository -> machine (bootstrap a new machine from this repo).
+# Use --force with --install to overwrite differing local files (backups are kept).
+
+mode="sync"
+force=0
+for arg in "$@"; do
+  case "$arg" in
+    --install) mode="install" ;;
+    --force) force=1 ;;
+    *) echo "Unknown argument: $arg" >&2; exit 2 ;;
+  esac
+done
+
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 codex_root="${CODEX_HOME:-$HOME/.codex}"
 opencode_root="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
 copilot_mcp_config="$HOME/.copilot/mcp-config.json"
 vscode_user_settings="$HOME/Library/Application Support/Code/User/settings.json"
+
+if [[ "$mode" == "install" ]]; then
+  install_file() {
+    local src="$1" dst="$2"
+    if [[ -e "$dst" ]]; then
+      if cmp -s "$src" "$dst"; then
+        echo "  up-to-date: $dst"
+        return 0
+      fi
+      if (( force )); then
+        cp "$dst" "$dst.bak.$(date +%Y%m%d%H%M%S)"
+        echo "  updated (backup kept): $dst"
+      else
+        echo "  SKIPPED, differs locally (rerun with --force to overwrite): $dst" >&2
+        return 0
+      fi
+    else
+      echo "  installed: $dst"
+    fi
+    mkdir -p "$(dirname "$dst")"
+    install -m 0644 "$src" "$dst"
+  }
+
+  merge_json() {
+    local src="$1" dst="$2"
+    python3 - "$src" "$dst" <<'PY'
+import json
+import pathlib
+import sys
+
+source = json.loads(pathlib.Path(sys.argv[1]).read_text())
+target_path = pathlib.Path(sys.argv[2])
+indent = int(sys.argv[3]) if len(sys.argv) > 3 else 2
+target = json.loads(target_path.read_text()) if target_path.exists() else {}
+added = []
+
+def merge(add, into, prefix=""):
+    for key, value in add.items():
+        if key not in into:
+            into[key] = value
+            added.append(prefix + key)
+        elif isinstance(value, dict) and isinstance(into[key], dict):
+            merge(value, into[key], prefix + key + ".")
+
+merge(source, target)
+if added:
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    target_path.write_text(json.dumps(target, indent=indent) + "\n")
+for key in added:
+    print(f"  merged: {key} -> {sys.argv[2]}")
+PY
+  }
+
+  echo "Installing Codex configuration..."
+  install_file "$repo_root/AGENTS.md" "$codex_root/AGENTS.md"
+  for role in worker tester planner reviewer; do
+    [[ -f "$repo_root/agents/$role.toml" ]] && install_file "$repo_root/agents/$role.toml" "$codex_root/agents/$role.toml"
+  done
+  for toml in "$repo_root"/agents/router/*.toml; do
+    [[ -e "$toml" ]] || break
+    install_file "$toml" "$codex_root/agents/$(basename "$toml")"
+  done
+  for skill in "$repo_root"/skills/global/*/ "$repo_root"/skills/productivity/*/ "$repo_root"/skills/engineering/*/; do
+    [[ -d "$skill" ]] || continue
+    install_file "$skill/SKILL.md" "$codex_root/skills/$(basename "$skill")/SKILL.md"
+  done
+
+  echo "Installing OpenCode configuration..."
+  install_file "$repo_root/opencode/AGENTS.md" "$opencode_root/AGENTS.md"
+  install_file "$repo_root/opencode/opencode.json" "$opencode_root/opencode.json"
+  for skill in "$repo_root"/opencode/skill/*/; do
+    [[ -d "$skill" ]] || continue
+    install_file "$skill/SKILL.md" "$opencode_root/skill/$(basename "$skill")/SKILL.md"
+  done
+
+  echo "Merging Copilot CLI MCP servers..."
+  merge_json "$repo_root/copilot/mcp-config.example.json" "$copilot_mcp_config"
+
+  echo "Merging VS Code settings..."
+  merge_json "$repo_root/vscode/settings.example.json" "$vscode_user_settings" 4
+
+  echo "Bootstrap install from $repo_root complete."
+  exit 0
+fi
 
 required_files=(
   "$codex_root/AGENTS.md"

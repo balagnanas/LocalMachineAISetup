@@ -21,7 +21,10 @@ and the final response. Delegation is selective so routine tasks do not duplicat
   (GLM-5.x, Kimi K2/K3, MiniMax M2/M3, Qwen 3.6–3.8, DeepSeek V4, Grok 4.5) to Codex.
 * `config.example.toml` — portable configuration fragment.
 * `opencode/AGENTS.md` — global OpenCode configuration-sync policy.
-* `scripts/sync-local-ai-setup.sh` — allowlisted local-to-repository synchronization.
+* `scripts/sync-local-ai-setup.sh` — allowlisted synchronization in both directions:
+  default salvages machine configuration into this repository; `--install` bootstraps
+  a new machine from the repository (additive JSON merges, differing local files are
+  skipped unless `--force`, which keeps timestamped backups).
 * `copilot/` — sanitized GitHub Copilot CLI role-agent profile plus an example MCP
   server configuration (`mcp-config.example.json`).
 * `vscode/settings.example.json` — portable VS Code user settings.

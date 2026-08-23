@@ -1,6 +1,9 @@
 {
   "mcpServers": {
     "azure": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
       "args": [
@@ -8,12 +11,12 @@
         "@azure/mcp@latest",
         "server",
         "start"
-      ],
-      "tools": [
-        "*"
       ]
     },
     "azure-ai-foundry": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "uvx",
       "args": [
@@ -25,32 +28,36 @@
         "--from",
         "git+https://github.com/azure-ai-foundry/mcp-foundry.git",
         "run-azure-ai-foundry-mcp"
-      ],
-      "tools": [
-        "*"
       ]
     },
     "playwright": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
       "args": [
         "-y",
         "@playwright/mcp@latest"
-      ],
-      "tools": [
-        "*"
       ]
     },
     "chrome-devtools": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
       "args": [
         "-y",
         "chrome-devtools-mcp@latest"
-      ],
+      ]
+    },
+    "firecrawl": {
       "tools": [
         "*"
-      ]
+      ],
+      "type": "http",
+      "url": "https://mcp.firecrawl.dev/v2/mcp"
     }
   }
 }
