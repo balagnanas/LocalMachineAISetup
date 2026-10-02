@@ -32,6 +32,13 @@ and the final response. Delegation is selective so routine tasks do not duplicat
 * `skills/` — reviewed, user-authored skills grouped by their source scope.
 * `opencode/skill/` and `.codex/skills/` — tool-specific mirrors of the same skills.
 
+The shared personal skill collection is also mirrored in `copilot/skills/`.
+Run `./scripts/sync-local-ai-setup.sh --sync-skills` to refresh its reviewed
+allowlist from the local Codex skill directory without importing configuration.
+The command preserves existing files and excludes caches, backups, and recorded
+learning logs. The payroll operations skill stays local because it contains
+customer and tenant details.
+
 ## Public Copilot and Scout profiles
 
 `copilot/` contains a portable GitHub Copilot CLI role-agent profile:

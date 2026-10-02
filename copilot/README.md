@@ -2,7 +2,12 @@
 
 This is a public, portable baseline for GitHub Copilot CLI. It contains only generic role agents and
 their shared workflow; it does not include user identity, installed plugins, MCP configuration,
-permissions, trusted folders, sessions, skills, authentication, or runtime state.
+permissions, trusted folders, sessions, authentication, or runtime state.
+
+`skills/` contains the reviewed portable mirror of the shared Codex/Copilot
+personal skills. Copy selected directories into `~/.copilot/skills/`, preserving
+their scripts and references. Compare existing versions before overwriting them.
+Customer-specific payroll instructions and recorded learning logs stay local.
 
 ## Install
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Veritax IQ Release Promotion"
+  short_description: "Ship, verify, and learn safely"
+  default_prompt: "Use $veritaxiq-release-promotion to promote and deploy this Veritax IQ change safely."

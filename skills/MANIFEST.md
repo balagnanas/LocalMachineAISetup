@@ -16,6 +16,18 @@ This inventory preserves the custom skills installed on the source machine as of
 
 ## Installation
 
+As of 2026-10-02, the shared Codex/Copilot personal collection contains 54 skills.
+The portable allowlist publishes 53 in their existing canonical scope under
+`skills/`, with matching `.codex/skills/` and `copilot/skills/` mirrors.
+`truway-payroll-sync` remains local because it includes customer and tenant details.
+The explicit allowlist is in `scripts/sync-local-ai-setup.sh --sync-skills`.
+Supporting scripts, agent metadata, and static references are included; backups,
+Python caches, learning logs, and recorded release evidence are excluded.
+
+To install the shared collection in Copilot, copy the reviewed directories from
+`copilot/skills/` into `~/.copilot/skills/`, including their supporting files.
+Compare existing files before overwriting them.
+
 Copy the intended skill directory into the matching Codex skill root. Do not
 blindly overwrite a local skill with the same name; compare the `SKILL.md` files
 first. The two `veritaxiq-release-promotion` variants are intentionally retained

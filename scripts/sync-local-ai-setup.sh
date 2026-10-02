@@ -11,6 +11,7 @@ for arg in "$@"; do
   case "$arg" in
     --install) mode="install" ;;
     --force) force=1 ;;
+    --sync-skills) mode="skills" ;;
     *) echo "Unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
@@ -20,6 +21,69 @@ codex_root="${CODEX_HOME:-$HOME/.codex}"
 opencode_root="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
 copilot_mcp_config="$HOME/.copilot/mcp-config.json"
 vscode_user_settings="$HOME/Library/Application Support/Code/User/settings.json"
+
+if [[ "$mode" == "skills" ]]; then
+  [[ "$#" -eq 1 ]] || { echo "Usage: $0 --sync-skills" >&2; exit 2; }
+  # Reviewed personal skills only; payroll tenant/customer details stay local.
+  portable_skills=(
+    add-model-9router-copilot bank-statement-local-regression changelog-generate
+    chronicle ci-pipeline client-portal-local-deployment code-review codebase-design
+    dependency-audit diagnosing-bugs domain-modeling explain
+    flowstudio-power-automate-build flowstudio-power-automate-debug
+    flowstudio-power-automate-governance flowstudio-power-automate-mcp
+    flowstudio-power-automate-monitoring git-release grill-me grill-with-docs grilling
+    handoff implement improve-codebase-architecture incident-rca
+    invoice-extraction-live-regression list-models local-document-diagnostic new-session
+    orchestrate-cheap prototype research resolving-merge-conflicts setup-matt-pocock-skills
+    tdd teach test-patterns to-questionnaire to-spec to-tickets triage update-9router-catalog
+    update-copilot-opencode-models veritaxiq-dev-deploy veritaxiq-prod-deploy
+    veritaxiq-project-safety veritaxiq-release-promotion wait-what wayfinder
+    web-design-guidelines wizard writing-for-agents writing-great-skills
+  )
+  python3 - "$codex_root/skills" "${portable_skills[@]}" <<'PY'
+import pathlib
+import re
+import sys
+
+root = pathlib.Path(sys.argv[1])
+sensitive = re.compile(
+    r"sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|"
+    r"AKIA[0-9A-Z]{16}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|"
+    r"Bearer [A-Za-z0-9._-]{20,}"
+)
+for name in sys.argv[2:]:
+    skill = root / name
+    if skill.is_symlink() or not (skill / 'SKILL.md').is_file():
+        raise SystemExit(f"Missing or linked skill: {name}")
+    for path in skill.rglob('*'):
+        if path.is_symlink():
+            raise SystemExit(f"Linked skill file: {path.relative_to(root)}")
+        if not path.is_file() or '__pycache__' in path.parts or '.bak.' in path.name:
+            continue
+        if path.suffix in {'.pyc', '.jsonl'} or path.name in {'observed-learnings.md', 'release-evidence.md'}:
+            continue
+        if sensitive.search(path.read_text()):
+            raise SystemExit(f"Credential-like value: {path.relative_to(root)}")
+print(f"Validated {len(sys.argv) - 2} portable skills.")
+PY
+  for skill in "${portable_skills[@]}"; do
+    canonical="$repo_root/skills/global/$skill"
+    for scope in engineering productivity; do
+      if [[ -d "$repo_root/skills/$scope/$skill" ]]; then
+        canonical="$repo_root/skills/$scope/$skill"
+        break
+      fi
+    done
+    for target in "$canonical" "$repo_root/.codex/skills/$skill" "$repo_root/copilot/skills/$skill"; do
+      mkdir -p "$target"
+      rsync -a --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.bak.*' \
+        --exclude='*.jsonl' --exclude='observed-learnings.md' --exclude='release-evidence.md' \
+        "$codex_root/skills/$skill/" "$target/"
+    done
+  done
+  echo "Synchronized ${#portable_skills[@]} skills into canonical, Codex, and Copilot mirrors."
+  exit 0
+fi
 
 if [[ "$mode" == "install" ]]; then
   install_file() {
